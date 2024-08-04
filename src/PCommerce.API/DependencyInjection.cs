@@ -8,6 +8,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
+        services.AddControllers();
+
+        services.AddSwaggerGen();
+        
         services.AddIdentity<Account, IdentityRole>()
             .AddEntityFrameworkStores<PCommerceDbContext>();
 
