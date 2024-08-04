@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using PCommerce.API.Controllers;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
 
@@ -8,6 +9,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
+
+        services.AddTransient<ProductController>();
+
         services.AddControllers();
 
         services.AddSwaggerGen();
