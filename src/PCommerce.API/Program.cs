@@ -10,6 +10,8 @@ builder.Services.AddApiServices()
 
 var app = builder.Build();
 
+app.MapControllers();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

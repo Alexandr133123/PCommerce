@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PCommerce.Infrastructure.Data;
 
+
 namespace PCommerce.Infrastructure;
 
 public static class DependencyInjection
