@@ -19,14 +19,17 @@ namespace PCommerce.API.Controllers
         }
 
         [HttpGet]
-        public List<Product> GetAllProducts()
+        public async Task<IActionResult> GetAllProductsAsync()
         {
-            return _productService.GetAllProducts();
+
+            var products = await _productService.GetAllProductsAsync();
+            return Ok(products);
+            
         }
         [HttpPost]
-        public IActionResult AddProduct(Product product)
+        public async Task<IActionResult> AddProductAsync(Product product)
         {
-            _productService.AddProduct(product);
+            await _productService.AddProductAsync(product);
             return Ok("Product added");
         }
     }

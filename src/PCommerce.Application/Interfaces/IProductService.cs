@@ -9,8 +9,8 @@ namespace PCommerce.Application.Interfaces
 {
     public interface IProductService
     {
-        List<Product> GetAllProducts();
+        Task<IEnumerable <Product>> GetAllProductsAsync();
 
-        public void AddProduct(Product product);
+        Task AddProductAsync(Product product);
     }
 }
