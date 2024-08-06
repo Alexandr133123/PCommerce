@@ -1,26 +1,26 @@
-﻿using PCommerce.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using PCommerce.Application.Interfaces;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PCommerce.Application.Services
 {
     public class ProductService : IProductService
     {
         private readonly PCommerceDbContext _context;
-
-        public List<Product> GetProducts()
+        public ProductService(PCommerceDbContext context)
         {
-            return _context.Products.ToList();
-            
+            _context = context;
         }
-        public void AddProduct(Product product)
+
+        public async Task<List<Product>> GetProductsAsync()
         {
-            _context.Add(product);
+            return await _context.Products.ToListAsync();
+        }
+        public async Task AddProductAsync(Product product)
+        {
+            await _context.AddAsync(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

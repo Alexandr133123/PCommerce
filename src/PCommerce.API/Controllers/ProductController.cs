@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using PCommerce.Application.Interfaces;
 using PCommerce.Infrastructure.Data.Models;
 
@@ -6,19 +7,25 @@ namespace PCommerce.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController
+    public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        public ProductController(IProductService productService)
+        {
+            _productService = productService;
+        }
 
         [HttpPost]
-        public void AddProduct(Product product)
+        public async Task<IActionResult> AddProductAsync(Product product)
         {
-            _productService.AddProduct(product);
+            await _productService.AddProductAsync(product);
+            return Ok();
         }
         [HttpGet]
-        public List<Product> GetProducts()
+        public async Task<IActionResult> GetProductsAsync()
         {
-            return _productService.GetProducts();
+            var products = await _productService.GetProductsAsync();
+            return Ok(products);
         }
     }
 }
