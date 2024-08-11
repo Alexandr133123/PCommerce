@@ -13,7 +13,7 @@ namespace PCommerce.Application.Interfaces
 
         Task AddProductAsync(Product product);
 
-        Task UpdateProductAsync(int id,Product product);
+        Task UpdateProductAsync(Product product);
 
         Task RemoveProductAsync(int id);
     }

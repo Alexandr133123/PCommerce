@@ -33,9 +33,9 @@ namespace PCommerce.API.Controllers
             return Ok("Product added");
         }
         [HttpPost("UpdateProduct")]
-        public async Task<IActionResult> UpdateProductAsync(int id, Product productToUpdate)
+        public async Task<IActionResult> UpdateProductAsync(Product productToUpdate)
         {
-            await _productService.UpdateProductAsync(id, productToUpdate);
+            await _productService.UpdateProductAsync(productToUpdate);
 
             return Ok("Product Updated");
         }

@@ -30,13 +30,13 @@ namespace PCommerce.Application.Services
           await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateProductAsync(int id,Product productToUpdate)
+        public async Task UpdateProductAsync(Product productToUpdate)
         {
-            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id ==productToUpdate.Id);
 
             if (existingProduct == null)
             {
-                throw new Exception($"Product with ID {id} not found");
+                throw new Exception($"Product with ID {productToUpdate.Id} not found");
             }
 
             existingProduct.Name = productToUpdate.Name;
