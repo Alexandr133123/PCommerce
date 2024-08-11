@@ -12,5 +12,9 @@ namespace PCommerce.Application.Interfaces
         Task<IEnumerable <Product>> GetAllProductsAsync();
 
         Task AddProductAsync(Product product);
+
+        Task UpdateProductAsync(int id,Product product);
+
+        Task RemoveProductAsync(int id);
     }
 }
