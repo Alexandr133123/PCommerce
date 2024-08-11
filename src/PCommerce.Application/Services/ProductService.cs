@@ -24,6 +24,10 @@ namespace PCommerce.Application.Services
         }
         public async Task DeleteProduct (Product product)
         {
+            if(product == null)
+            {
+                throw new Exception();
+            }
             _context.Remove(product);
             await _context.SaveChangesAsync();
         }
