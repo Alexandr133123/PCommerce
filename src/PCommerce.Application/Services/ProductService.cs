@@ -22,5 +22,21 @@ namespace PCommerce.Application.Services
             await _context.AddAsync(product);
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteProduct (Product product)
+        {
+            _context.Remove(product);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateProduct(int id, Product updatedProduct)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+            if (product == null)
+            {
+                throw new Exception();
+            }
+            product.Price = updatedProduct.Price;
+            product.Name = updatedProduct.Name;
+            await _context.SaveChangesAsync();
+        }
     }
 }
