@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PCommerce.Infrastructure.Data.Models;
+using System.Reflection;
 
 namespace PCommerce.Infrastructure.Data;
 
@@ -11,5 +12,10 @@ public sealed class PCommerceDbContext : IdentityDbContext<Account>
     {
         
         Database.EnsureCreated();
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
