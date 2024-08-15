@@ -22,7 +22,7 @@ namespace PCommerce.Application.Services
             _dbContext.Add(product);
             _dbContext.SaveChanges();
         }
-        public async void Update(Product product, int productId)
+        public async Task UpdateAsync(Product product, int productId)
         {
             var model = _dbContext.Products.FirstOrDefault(p => p.Id == productId);
 
@@ -36,7 +36,7 @@ namespace PCommerce.Application.Services
             await _dbContext.SaveChangesAsync();
 
         }
-        public async void Remove(int productId)
+        public async Task RemoveAsync(int productId)
         {
            var model = await _dbContext.Products.FirstOrDefaultAsync(p=>p.Id == productId);
             if (model == null)

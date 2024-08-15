@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.Interfaces;
 using PCommerce.Infrastructure.Data.Models;
 
@@ -23,7 +24,18 @@ namespace PCommerce.API.Controllers
         {
             return _productService.GetAllProduct();
         }
-        
-         
+        [HttpPut]
+        public async Task UpdateAsync(Product product, int productId)
+        {
+             await _productService.UpdateAsync(product, productId);
+
+        }
+        [HttpDelete]
+        public async Task RemoveAsync(int productId)
+        {
+            await _productService.RemoveAsync(productId);
+
+        }
+
     }
 }

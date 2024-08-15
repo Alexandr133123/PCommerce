@@ -11,8 +11,8 @@ namespace PCommerce.Application.Interfaces
     public interface IProductService 
     {
         void Add (Product product);
-        void Remove (Product product, int productId);
-        void Update (Product product, int productId);
+        Task RemoveAsync(int productId);
+        Task UpdateAsync(Product product, int productId);
         List <Product> GetAllProduct();
         
     }
