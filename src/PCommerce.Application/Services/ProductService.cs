@@ -22,15 +22,29 @@ namespace PCommerce.Application.Services
             _dbContext.Add(product);
             _dbContext.SaveChanges();
         }
-        public void Update(Product product)
+        public async void Update(Product product, int productId)
         {
-            _dbContext.Update(product);
-            _dbContext.SaveChanges();
+            var model = _dbContext.Products.FirstOrDefault(p => p.Id == productId);
+
+            if (model == null)
+            {
+                throw new Exception($"Продукт с id {productId} не найден");
+            }
+            model.Name = product.Name;
+            model.Price = product.Price;
+            
+            await _dbContext.SaveChangesAsync();
+
         }
-        public void Remove(Product product)
+        public async void Remove(int productId)
         {
-            _dbContext.Remove(product);
-            _dbContext.SaveChanges();
+           var model = await _dbContext.Products.FirstOrDefaultAsync(p=>p.Id == productId);
+            if (model == null)
+            {
+                throw new Exception($"Нет такого id - {productId}");
+            }           
+            _dbContext.Remove(model);
+            await _dbContext.SaveChangesAsync();
         }
         public List<Product> GetAllProduct()
         {
