@@ -8,8 +8,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services = new ServiceCollection()
-        .AddTransient<IProductService, ProductService>
+        services
+        .AddTransient<IProductService, ProductService>();
 
         return services;
     }
