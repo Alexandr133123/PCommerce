@@ -15,6 +15,8 @@ namespace PCommerce.Infrastructure.Data.Models
         public string Name { get; set; }
 
         public int Price { get; set; }
+
+        public List<Category> Categories { get; set; }
     }
     public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
@@ -30,6 +32,9 @@ namespace PCommerce.Infrastructure.Data.Models
             builder.Property(p => p.Price)
                 .IsRequired();
 
+            builder.HasMany(p => p.Categories)
+                .WithMany(p => p.Products)
+                .UsingEntity("Product Categories");
         }
     }
 }
