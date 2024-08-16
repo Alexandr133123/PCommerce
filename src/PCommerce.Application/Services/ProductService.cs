@@ -16,9 +16,7 @@ namespace PCommerce.Application.Services
 
         public async Task<List<ProductDto>> GetProductsAsync()
         {
-            await _context.Products.Include(c => c.Categories).ToListAsync();
-
-            var productList = new List<Product>();
+            var productList = await _context.Products.Include(c => c.Categories).ToListAsync();
 
             var productDtoList = productList.Select(p => new ProductDto
             {
