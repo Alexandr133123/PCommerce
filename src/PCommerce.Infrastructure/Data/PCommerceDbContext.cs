@@ -11,7 +11,7 @@ public sealed class PCommerceDbContext : IdentityDbContext<Account>
     public DbSet<Category> Categories { get; set; }
     public PCommerceDbContext(DbContextOptions<PCommerceDbContext> options) : base(options)
     {
-        
+        Database.EnsureDeleted();
         Database.EnsureCreated();
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

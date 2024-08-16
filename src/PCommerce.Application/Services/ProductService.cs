@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.Interfaces;
+using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
 
@@ -13,9 +14,26 @@ namespace PCommerce.Application.Services
             _context = context;
         }
 
-        public async Task<List<Product>> GetProductsAsync()
+        public async Task<List<ProductDto>> GetProductsAsync()
         {
-            return await _context.Products.ToListAsync();
+            await _context.Products.Include(c => c.Categories).ToListAsync();
+
+            var productList = new List<Product>();
+
+            var productDtoList = productList.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Categories = p.Categories.Select(c => new CategoryDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+
+                }).ToList(),
+            }).ToList();
+
+            return productDtoList;
         }
         public async Task AddProductAsync(Product product)
         {

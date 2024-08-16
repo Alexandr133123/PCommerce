@@ -15,4 +15,10 @@
       <ProjectReference Include="..\PCommerce.Application\PCommerce.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Program.cs">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Compile>
+    </ItemGroup>
+
 </Project>
