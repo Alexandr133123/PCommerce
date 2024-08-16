@@ -19,9 +19,24 @@ namespace PCommerce.Application.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
         {
-            return await _context.Products.ToListAsync();
+           var products = await _context.Products.Include(p => p.Categories).ToListAsync();
+
+            var productsDtos = products.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Categories = p.Categories.Select(c => new CategoryDto
+                {
+                    Id = c.Id,
+
+                    Name = c.Name,
+
+                }).ToList(),
+            }).ToList();
+            return productsDtos;
         }
 
         public async  Task AddProductAsync(Product product)
