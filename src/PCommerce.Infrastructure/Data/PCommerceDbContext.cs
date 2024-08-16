@@ -8,6 +8,7 @@ namespace PCommerce.Infrastructure.Data;
 public sealed class PCommerceDbContext : IdentityDbContext<Account>
 {
     public DbSet<Product>  Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
     public PCommerceDbContext(DbContextOptions<PCommerceDbContext> options) : base(options)
     {
         
