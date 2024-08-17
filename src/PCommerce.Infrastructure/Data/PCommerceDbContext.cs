@@ -13,12 +13,9 @@ public sealed class PCommerceDbContext : IdentityDbContext<Account>
 
     public DbSet<Category> Categories { get; set; }
 
-    public DbSet<CategoryDto> CategoriesDto { get; set; }
-
-    public DbSet<ProductDto> ProductsDto { get; set; }
     public PCommerceDbContext(DbContextOptions<PCommerceDbContext> options) : base(options)
     {
-        
+       
         Database.EnsureCreated();
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

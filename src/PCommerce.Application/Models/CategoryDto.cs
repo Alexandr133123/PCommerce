@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PCommerce.Infrastructure.Data.Models
+namespace PCommerce.Application.Models
 {
     public class CategoryDto
     {

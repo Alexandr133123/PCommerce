@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.Interfaces;
+using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
 using System;

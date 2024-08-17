@@ -1,4 +1,5 @@
-﻿using PCommerce.Infrastructure.Data.Models;
+﻿using PCommerce.Application.Models;
+using PCommerce.Infrastructure.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
