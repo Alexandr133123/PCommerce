@@ -9,6 +9,7 @@ public sealed class PCommerceDbContext : IdentityDbContext<Account>
 {
     
     public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
     public PCommerceDbContext(DbContextOptions<PCommerceDbContext> options) : base(options)
     {
         Database.EnsureCreated();
@@ -18,6 +19,5 @@ public sealed class PCommerceDbContext : IdentityDbContext<Account>
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(modelBuilder);
-
     }
 }

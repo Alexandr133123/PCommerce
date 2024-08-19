@@ -22,6 +22,9 @@ namespace PCommerce.Infrastructure.Data.Models.Configurations
             builder.Property(p => p.Price)
                 .IsRequired();
 
+            builder.HasMany(p => p.Categories)
+                .WithMany(p => p.Products);
+
         }
     }
 }
