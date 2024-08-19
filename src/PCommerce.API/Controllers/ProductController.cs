@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using PCommerce.Application.Interfaces;
 using PCommerce.Infrastructure.Data.Models;
+using PCommerce.Application.Models;
 
 namespace PCommerce.API.Controllers
 {
@@ -16,7 +17,7 @@ namespace PCommerce.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProductAsync(Product product)
+        public async Task<IActionResult> AddProductAsync(ProductDto product)
         {
             await _productService.AddProductAsync(product);
             return Ok("Product was added");

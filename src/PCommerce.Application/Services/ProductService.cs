@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
@@ -33,9 +34,27 @@ namespace PCommerce.Application.Services
 
             return productDtoList;
         }
-        public async Task AddProductAsync(Product product)
+        public async Task AddProductAsync(ProductDto product)
         {
-            await _context.AddAsync(product);
+            var prod = new Product()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price
+            };
+
+            var categoryId = product.Categories.Select(p => p.Id).ToList();
+            if (categoryId.Count != 0)
+            {
+                var categoryes = await _context.Categories
+                    .Where(c => categoryId.Contains(c.Id))
+                    .ToListAsync();
+
+                prod.Categories = categoryes;
+            }
+
+            await _context.AddAsync(prod);
+
             await _context.SaveChangesAsync();
         }
         public async Task DeleteProduct (Product product)
