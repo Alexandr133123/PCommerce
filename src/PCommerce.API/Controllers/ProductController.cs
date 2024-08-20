@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.Interfaces;
+using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data.Models;
 
 namespace PCommerce.API.Controllers
@@ -15,26 +16,27 @@ namespace PCommerce.API.Controllers
             _productService = productService;
         }
         [HttpPost]
-        public void Add(Product product)
+        public IActionResult AddAsync(ProductDto productDto)
         {
-            _productService.Add(product);
+            _productService.AddAsync(productDto);
+            return Ok();
         }
         [HttpGet]
-        public List<Product> GetAllProduct()
-        {
-            return _productService.GetAllProduct();
+        public async Task<IActionResult> GetAllProductAsync()
+        {            
+            return Ok(await _productService.GetAllProductAsync());
         }
         [HttpPut]
-        public async Task UpdateAsync(Product product, int productId)
+        public async Task<IActionResult> UpdateAsync(Product product, int productId)
         {
-             await _productService.UpdateAsync(product, productId);
-
+            await _productService.UpdateAsync(product, productId);
+            return Ok(); 
         }
         [HttpDelete]
-        public async Task RemoveAsync(int productId)
+        public async Task<IActionResult> RemoveAsync(int productId)
         {
             await _productService.RemoveAsync(productId);
-
+            return Ok();
         }
 
     }

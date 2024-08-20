@@ -1,19 +1,14 @@
-﻿using PCommerce.Infrastructure.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PCommerce.Application.Models;
+using PCommerce.Infrastructure.Data.Models;
 
 namespace PCommerce.Application.Interfaces
 {
-    public interface IProductService 
+    public interface IProductService
     {
-        void Add (Product product);
+        Task AddAsync(ProductDto productDto);
         Task RemoveAsync(int productId);
         Task UpdateAsync(Product product, int productId);
-        List <Product> GetAllProduct();
-        
+        Task<List<ProductDto>> GetAllProductAsync();
+       
     }
 }
