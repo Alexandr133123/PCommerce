@@ -52,7 +52,7 @@ namespace PCommerce.Application.Services
             List<int> categoryIds = productDto.Categories.Select(c => c.Id).ToList() ?? new List<int>();
 
 
-            if (categoryIds != null)
+            if (categoryIds.Any())
             {
                 var categories = await _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
 
