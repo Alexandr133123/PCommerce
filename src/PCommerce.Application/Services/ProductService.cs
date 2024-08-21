@@ -40,10 +40,28 @@ namespace PCommerce.Application.Services
             return productsDtos;
         }
 
-        public async  Task AddProductAsync(Product product)
+        public async Task AddProductAsync(ProductDto productDto)
         {
-          await _context.Products.AddAsync(product);
-          await _context.SaveChangesAsync();
+            var product  = new Product
+            {
+                Id = productDto.Id,
+                Name = productDto.Name,
+                Price = productDto.Price,
+            };
+
+            List<int> categoryIds = productDto.Categories.Select(c => c.Id).ToList() ?? new List<int>();
+
+
+            if (categoryIds != null)
+            {
+                var categories = await _context.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+
+                product.Categories = categories;
+            }
+            await _context.Products.AddAsync(product);
+
+            await _context.SaveChangesAsync();
+            
         }
 
         public async Task UpdateProductAsync(Product productToUpdate)

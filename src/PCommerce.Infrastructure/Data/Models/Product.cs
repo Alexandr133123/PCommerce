@@ -14,7 +14,7 @@ namespace PCommerce.Infrastructure.Data.Models
 
         public string Name { get; set; }
 
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         public List<Category> Categories { get; set; }
     }
