@@ -10,6 +10,8 @@ public static class DependencyInjection
     {
         services.AddTransient<IProductService, ProductService>();
 
+        services.AddTransient<ICategoryService, CategoryService>();
+
         return services;
     }
 }

@@ -15,7 +15,6 @@ public sealed class PCommerceDbContext : IdentityDbContext<Account>
 
     public PCommerceDbContext(DbContextOptions<PCommerceDbContext> options) : base(options)
     {
-        
         Database.EnsureCreated();
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

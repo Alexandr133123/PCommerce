@@ -66,7 +66,7 @@ namespace PCommerce.Application.Services
 
         public async Task UpdateProductAsync(Product productToUpdate)
         {
-            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id ==productToUpdate.Id);
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productToUpdate.Id);
 
             if (existingProduct == null)
             {

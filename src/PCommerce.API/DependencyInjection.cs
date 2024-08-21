@@ -12,6 +12,8 @@ public static class DependencyInjection
 
         services.AddTransient<ProductController>();
 
+        services.AddTransient<CategoryController>();
+
         services.AddControllers();
 
         services.AddSwaggerGen();
