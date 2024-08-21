@@ -49,7 +49,7 @@ namespace PCommerce.Application.Services
                 Price = productDto.Price,
             };
 
-            List<int> categoryIds = productDto.Categories.Select(c => c.Id).ToList() ?? new List<int>();
+            List<int> categoryIds = productDto.Categories.Select(c => c.Id).ToList();
 
 
             if (categoryIds.Any())
