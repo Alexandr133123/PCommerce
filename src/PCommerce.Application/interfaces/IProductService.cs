@@ -8,7 +8,7 @@ namespace PCommerce.Application.Interfaces
     {
         public Task<List<ProductDto>> GetProductsAsync();
         public Task AddProductAsync(ProductDto product);
-        public Task DeleteProduct(Product product);
-        public Task UpdateProduct(int id, Product updatedProduct);
+        public Task DeleteProductAsync(int id);
+        public Task UpdateProductAsync(int id, Product updatedProduct);
     }
 }

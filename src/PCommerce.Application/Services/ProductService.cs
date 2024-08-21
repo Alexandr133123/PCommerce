@@ -57,8 +57,9 @@ namespace PCommerce.Application.Services
 
             await _context.SaveChangesAsync();
         }
-        public async Task DeleteProduct (Product product)
+        public async Task DeleteProductAsync(int id)
         {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             if(product == null)
             {
                 throw new Exception();
@@ -66,7 +67,7 @@ namespace PCommerce.Application.Services
             _context.Remove(product);
             await _context.SaveChangesAsync();
         }
-        public async Task UpdateProduct(int id, Product updatedProduct)
+        public async Task UpdateProductAsync(int id, Product updatedProduct)
         {
             var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
             if (product == null)

@@ -29,15 +29,15 @@ namespace PCommerce.API.Controllers
             return Ok(products);
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteProduct(Product product)
+        public async Task<IActionResult> DeleteProductAsync(int id)
         {
-            await _productService.DeleteProduct(product);
+            await _productService.DeleteProductAsync(id);
             return Ok("Product was deleted");
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateProduct(int id, Product updatedProduct)
+        public async Task<IActionResult> UpdateProductAsync(int id, Product updatedProduct)
         {
-            await _productService.UpdateProduct(id, updatedProduct);
+            await _productService.UpdateProductAsync(id, updatedProduct);
             return Ok("Product was updated");
         }
 
