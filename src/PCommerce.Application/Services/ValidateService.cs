@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PCommerce.Application.Services
 {
-    public class ValidateService
+    public class ValidateService:IValidatorService
     {
         public readonly IServiceProvider _serviceProvider;
 
