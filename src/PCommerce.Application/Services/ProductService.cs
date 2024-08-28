@@ -15,9 +15,12 @@ namespace PCommerce.Application.Services
     {
         private readonly PCommerceDbContext _context;
 
-        public  ProductService(PCommerceDbContext context)
+        private readonly ValidateService _validateService;
+
+        public  ProductService(PCommerceDbContext context, ValidateService validateService)
         {
             _context = context;
+            _validateService = validateService;
         }
 
         public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
@@ -42,6 +45,8 @@ namespace PCommerce.Application.Services
 
         public async Task AddProductAsync(ProductDto productDto)
         {
+            await _validateService.ValidateAsync(productDto);
+
             var product  = new Product
             {
                 Id = productDto.Id,
