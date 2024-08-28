@@ -10,13 +10,16 @@ namespace PCommerce.Application.Services
     public class ProductService : IProductService
     {
         private readonly PCommerceDbContext _context;
-        public ProductService(PCommerceDbContext context)
+        private readonly ValidationService _validationService;
+        public ProductService(PCommerceDbContext context, ValidationService validationService)
         {
             _context = context;
+            _validationService = validationService;
         }
 
         public async Task<List<ProductDto>> GetProductsAsync()
         {
+
             var productList = await _context.Products.Include(c => c.Categories).ToListAsync();
 
             var productDtoList = productList.Select(p => new ProductDto
@@ -36,6 +39,8 @@ namespace PCommerce.Application.Services
         }
         public async Task AddProductAsync(ProductDto product)
         {
+            await _validationService.ValidateAsync(product);
+
             var prod = new Product()
             {
                 Id = product.Id,

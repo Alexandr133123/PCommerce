@@ -1,8 +1,10 @@
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PCommerce.Application.interfaces;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Services;
-using PCommerce.Infrastructure.Data;
+using PCommerce.Application.Validators;
+
 
 namespace PCommerce.Application;
 
@@ -12,7 +14,11 @@ public static class DependencyInjection
     {
         // Add new services and its interfaces to this method
         services.AddTransient<IProductService, ProductService>()
-            .AddTransient<ICategoryService, CategoryService>();
+            .AddTransient<ICategoryService, CategoryService>()
+            .AddTransient<ValidationService>();
+
+        services.AddValidatorsFromAssemblyContaining<ProductDtoValidator>();
+        
         return services;
     }
 }
