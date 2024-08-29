@@ -1,4 +1,7 @@
-﻿using PCommerce.Infrastructure.Data;
+﻿using FluentValidation;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using PCommerce.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +13,20 @@ namespace PCommerce.Application.Services
 {
     public class ValidationService
     {
-        private readonly PCommerceDbContext _dbContext;
-        public ValidationService(PCommerceDbContext validatorService)
+        private readonly IServiceProvider _serviceProvider;   
+        ValidationService (IServiceProvider serviceProvider)
         {
-            _dbContext = validatorService;
+            _serviceProvider = serviceProvider;
         }
-        public async Task ValidateAsync<T>(T entry)
+        async Task ValidateAsync<T>(T enter)
         {
-           
+           var validator = _serviceProvider.GetService<IValidator<T>>();
+            if (validator == null)
+            {
+                throw new Exception();
+            }
+            await validator.ValidateAndThrowAsync(enter);
         }
+        
     }
 }
