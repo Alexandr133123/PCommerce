@@ -1,4 +1,6 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using PCommerce.Application.Validators;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
 
@@ -14,6 +16,8 @@ public static class DependencyInjection
         
         services.AddIdentity<Account, IdentityRole>()
             .AddEntityFrameworkStores<PCommerceDbContext>();
+        services.AddMvc();
+        services.AddValidatorsFromAssemblyContaining<ProductDtoValidator>();
 
         return services;
     }
