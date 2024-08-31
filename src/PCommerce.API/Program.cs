@@ -10,7 +10,9 @@ builder.Services.AddApiServices()
 
 var app = builder.Build();
 
+app.UseExceptionHandler(op => {});
 app.MapControllers();
+
 
 if (app.Environment.IsDevelopment())
 {

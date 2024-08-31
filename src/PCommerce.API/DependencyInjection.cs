@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using PCommerce.API.Infrastructure;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
 
@@ -11,9 +12,10 @@ public static class DependencyInjection
         services.AddControllers();
 
         services.AddSwaggerGen();
-        
+
         services.AddIdentity<Account, IdentityRole>()
             .AddEntityFrameworkStores<PCommerceDbContext>();
+        services.AddExceptionHandler<ExceptionHandler>();
 
         return services;
     }
