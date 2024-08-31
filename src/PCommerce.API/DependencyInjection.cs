@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using PCommerce.API.Controllers;
+using PCommerce.API.Infrastructure;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
 
@@ -13,6 +14,8 @@ public static class DependencyInjection
         services.AddTransient<ProductController>();
 
         services.AddTransient<CategoryController>();
+
+        services.AddExceptionHandler<ExceptionHandler>();
 
         services.AddControllers();
 
