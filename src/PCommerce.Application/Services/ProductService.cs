@@ -47,9 +47,12 @@ namespace PCommerce.Application.Services
         {
             var validateResult = await _validateService.ValidateAsync(productDto);
 
-            if(validateResult.IsFaulted )
+            if(!validateResult.IsValid)
             {
-                return OperationResult.Failure(validateResult.ErrorMessage);
+                string responseMessage = string.Join("\n", validateResult.Errors.Select(p => p.ErrorMessage));
+
+                return OperationResult.Failure(responseMessage);
+
             }
 
             var product  = new Product

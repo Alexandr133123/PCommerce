@@ -1,14 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PCommerce.Application.Interfaces;
-using PCommerce.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using FluentValidation.Results;
 
 namespace PCommerce.Application.Services
 {
@@ -23,7 +16,7 @@ namespace PCommerce.Application.Services
 
         }
 
-        public async Task<OperationResult> ValidateAsync<T>(T entry)
+        public async Task<ValidationResult> ValidateAsync<T>(T entry)
         {
             var validator = _serviceProvider.GetService<IValidator<T>>();
 
@@ -32,19 +25,9 @@ namespace PCommerce.Application.Services
                 throw new Exception();
             }
 
-            var validateResult = await validator.ValidateAsync(entry);
+            return await validator.ValidateAsync(entry);
 
-            if (validateResult.IsValid)
-            {
-                return OperationResult.Success();
-            }
-
-            else
-            {
-                string responseMessage = string.Join("\n", validateResult.Errors.Select(p => p.ErrorMessage));
-
-                return OperationResult.Failure(responseMessage);
-            }
+            
         }
 
     }
