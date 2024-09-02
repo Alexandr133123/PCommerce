@@ -7,7 +7,7 @@ namespace PCommerce.Application.Interfaces
     public interface IProductService
     {
         public Task<List<ProductDto>> GetProductsAsync();
-        public Task AddProductAsync(ProductDto product);
+        public Task<OperationResult> AddProductAsync(ProductDto product);
         public Task DeleteProductAsync(int id);
         public Task UpdateProductAsync(int id, Product updatedProduct);
     }

@@ -2,7 +2,6 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PCommerce.Application.Models;
-using PCommerce.Application.Validators;
 
 
 namespace PCommerce.Application.Services
@@ -14,16 +13,28 @@ namespace PCommerce.Application.Services
         {
             _serviceProvider = serviceProvider;
         }
-        public async Task ValidateAsync<T>(T entry)
+        public async Task<OperationResult> ValidateAsync<T>(T entry)
         {
             var validator = _serviceProvider.GetService<IValidator<T>>();
 
-            if(validator == null)
+            if (validator == null)
             {
                 throw new Exception();
             }
 
-            await validator.ValidateAndThrowAsync(entry);
+            var validateResult = await validator.ValidateAsync(entry);
+
+            if (validateResult.IsValid)
+            {
+                return OperationResult.Success();
+            }
+
+            var errorMessage = validateResult.Errors.Select(e => e.ErrorMessage);
+
+            var message = string.Join("\n", errorMessage);
+
+            return OperationResult.Failure(message);
+
         }
     }
 }

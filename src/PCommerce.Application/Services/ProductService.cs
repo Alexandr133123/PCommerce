@@ -37,9 +37,19 @@ namespace PCommerce.Application.Services
 
             return productDtoList;
         }
-        public async Task AddProductAsync(ProductDto product)
+        public async Task<OperationResult> AddProductAsync(ProductDto product)
         {
-            await _validationService.ValidateAsync(product);
+            var validate = await _validationService.ValidateAsync(product);
+
+            if(validate == null)
+            {
+                throw new Exception();
+            }
+            
+            if (validate.IsFaulted)
+            {
+                return OperationResult.Failure(validate.ErrorMessage);
+            }
 
             var prod = new Product()
             {
@@ -61,6 +71,8 @@ namespace PCommerce.Application.Services
             await _context.AddAsync(prod);
 
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
         public async Task DeleteProductAsync(int id)
         {
