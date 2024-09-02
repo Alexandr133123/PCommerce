@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCommerce.Application.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace PCommerce.Application.Interfaces
 {
     public interface IValidatorService
     {
-        Task ValidateAsync<T>(T entry); 
+        Task <OperationResult> ValidateAsync<T>(T entry); 
     }
 }

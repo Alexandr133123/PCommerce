@@ -43,9 +43,14 @@ namespace PCommerce.Application.Services
             return productsDtos;
         }
 
-        public async Task AddProductAsync(ProductDto productDto)
+        public async Task<OperationResult> AddProductAsync(ProductDto productDto)
         {
-            await _validateService.ValidateAsync(productDto);
+            var validateResult = await _validateService.ValidateAsync(productDto);
+
+            if(validateResult.IsFaulted )
+            {
+                return OperationResult.Failure(validateResult.ErrorMessage);
+            }
 
             var product  = new Product
             {
@@ -66,6 +71,8 @@ namespace PCommerce.Application.Services
             await _context.Products.AddAsync(product);
 
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
             
         }
 

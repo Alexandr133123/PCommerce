@@ -30,7 +30,12 @@ namespace PCommerce.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProductAsync(ProductDto product)
         {
-            await _productService.AddProductAsync(product);
+            var result = await _productService.AddProductAsync(product);
+
+            if(result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
             return Ok("Product added");
         }
         [HttpPost("UpdateProduct")]

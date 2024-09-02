@@ -12,7 +12,7 @@ namespace PCommerce.Application.Interfaces
     {
         Task<IEnumerable <ProductDto>> GetAllProductsAsync();
 
-        Task AddProductAsync(ProductDto productDto);
+        Task <OperationResult> AddProductAsync(ProductDto productDto);
 
         Task UpdateProductAsync(Product product);
 

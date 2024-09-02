@@ -8,9 +8,9 @@ namespace PCommerce.Application.Models
 {
     public class OperationResult
     {
-        readonly bool IsSuccess;
+        public  bool IsSuccess { get; }
         
-        readonly string ErrorMessage;
+        public string ErrorMessage { get; }
 
         protected OperationResult(bool isSuccess, string errorMessage)
         {
