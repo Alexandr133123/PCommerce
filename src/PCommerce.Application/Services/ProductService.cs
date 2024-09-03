@@ -23,9 +23,11 @@ namespace PCommerce.Application.Services
             _validateService = validateService;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        public async Task<OperationResult<IEnumerable<ProductDto>>> GetAllProductsAsync()
         {
            var products = await _context.Products.Include(p => p.Categories).ToListAsync();
+
+            
 
             var productsDtos = products.Select(p => new ProductDto
             {
@@ -40,7 +42,9 @@ namespace PCommerce.Application.Services
 
                 }).ToList(),
             }).ToList();
-            return productsDtos;
+
+            return OperationResult<IEnumerable<ProductDto>>.Success(productsDtos);
+
         }
 
         public async Task<OperationResult> AddProductAsync(ProductDto productDto)
@@ -79,13 +83,22 @@ namespace PCommerce.Application.Services
             
         }
 
-        public async Task UpdateProductAsync(Product productToUpdate)
+        public async Task<OperationResult> UpdateProductAsync(Product productToUpdate)
         {
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productToUpdate.Id);
 
-            if (existingProduct == null)
+            var validateResult = await _validateService.ValidateAsync(existingProduct);
+
+            if (!validateResult.IsValid)
             {
-                throw new Exception($"Product with ID {productToUpdate.Id} not found");
+                string responseMessage = string.Join("\n", validateResult.Errors.Select(p => p.ErrorMessage));
+
+                return OperationResult.Failure(responseMessage);
+            }
+
+            if (existingProduct == null )
+            {
+                return OperationResult.Failure($"Product with ID {productToUpdate.Id} not found");
             }
 
             existingProduct.Name = productToUpdate.Name;
@@ -94,25 +107,24 @@ namespace PCommerce.Application.Services
 
             await _context.SaveChangesAsync();
 
+            return OperationResult.Success();
+
         }
         
-        public async Task RemoveProductAsync(int id)
+        public async Task<OperationResult> RemoveProductAsync(int id)
         {
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if (existingProduct == null)
             {
-                throw new Exception($"Product with ID {id} not found");
+                return OperationResult.Failure($"Product with ID {id} not found");
             }
 
             _context.Remove(existingProduct);
 
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
-
-
-
-       
-
     }
 }
