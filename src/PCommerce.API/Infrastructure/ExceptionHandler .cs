@@ -8,23 +8,9 @@ namespace PCommerce.API.Infrastructure
        
         public async  ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-            int statusCode;
-            string responseMessage;
-
-            if(exception is ValidationException validation)
-            {
-                responseMessage = string.Join("\n" , validation.Errors.Select(p => p.ErrorMessage));
-                statusCode = 400;
-            }
-            else
-            {
-                responseMessage = exception.Message;
-                statusCode = 500;
-            }
-
-            httpContext.Response.StatusCode = statusCode;
+            httpContext.Response.StatusCode = 500;
             httpContext.Response.ContentType = "text/plain";
-            await httpContext.Response.WriteAsync(responseMessage, cancellationToken);
+            await httpContext.Response.WriteAsync(exception.Message, cancellationToken);
 
             return true;
         }
