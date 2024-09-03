@@ -6,9 +6,9 @@ namespace PCommerce.Application.Interfaces
 {
     public interface IProductService
     {
-        public Task<List<ProductDto>> GetProductsAsync();
+        public Task<OperationResult<List<ProductDto>>> GetProductsAsync();
         public Task<OperationResult> AddProductAsync(ProductDto product);
-        public Task DeleteProductAsync(int id);
-        public Task UpdateProductAsync(int id, Product updatedProduct);
+        public Task<OperationResult> DeleteProductAsync(int id);
+        public Task<OperationResult> UpdateProductAsync(int id, Product updatedProduct);
     }
 }

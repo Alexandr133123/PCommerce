@@ -16,7 +16,7 @@ namespace PCommerce.Application.Services
             _validationService = validationService;
         }
 
-        public async Task<List<ProductDto>> GetProductsAsync()
+        public async Task<OperationResult<List<ProductDto>>> GetProductsAsync()
         {
 
             var productList = await _context.Products.Include(c => c.Categories).ToListAsync();
@@ -34,7 +34,7 @@ namespace PCommerce.Application.Services
                 }).ToList(),
             }).ToList();
 
-            return productDtoList;
+            return OperationResult<List<ProductDto>>.Success(productDtoList);
         }
         public async Task<OperationResult> AddProductAsync(ProductDto product)
         {
@@ -68,26 +68,36 @@ namespace PCommerce.Application.Services
 
             return OperationResult.Success();
         }
-        public async Task DeleteProductAsync(int id)
+        public async Task<OperationResult> DeleteProductAsync(int id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             if (product == null)
             {
-                throw new Exception();
+                OperationResult.Failure($"Product with id - {id}, not found");
             }
             _context.Remove(product);
             await _context.SaveChangesAsync();
+            return OperationResult.Success();
         }
-        public async Task UpdateProductAsync(int id, Product updatedProduct)
+        public async Task<OperationResult> UpdateProductAsync(int id, Product updatedProduct)
         {
+            var validate = await _validationService.ValidateAsync(updatedProduct);
+
+            if (validate.IsFaulted)
+            {
+                return OperationResult.Failure(validate.ErrorMessage);
+            }
+
             var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
             if (product == null)
             {
-                throw new Exception();
+                OperationResult.Failure($"Product with id - {id}, not found");
             }
             product.Price = updatedProduct.Price;
             product.Name = updatedProduct.Name;
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
     }
 }

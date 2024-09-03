@@ -32,18 +32,36 @@ namespace PCommerce.API.Controllers
         public async Task<IActionResult> GetProductsAsync()
         {
             var products = await _productService.GetProductsAsync();
+
+            if (products.IsFaulted)
+            {
+                return BadRequest(products.ErrorMessage);
+            }
+
             return Ok(products);
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteProductAsync(int id)
         {
-            await _productService.DeleteProductAsync(id);
+            var result = await _productService.DeleteProductAsync(id);
+
+            if (result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+            
             return Ok("Product was deleted");
         }
         [HttpPut]
         public async Task<IActionResult> UpdateProductAsync(int id, Product updatedProduct)
         {
-            await _productService.UpdateProductAsync(id, updatedProduct);
+            var result = await _productService.UpdateProductAsync(id, updatedProduct);
+
+            if (result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
             return Ok("Product was updated");
         }
 

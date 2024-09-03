@@ -24,21 +24,21 @@ namespace PCommerce.Application.Models
             return new OperationResult(false, message);
         }
     }
-    public class OperationRusult<T> : OperationResult
+    public class OperationResult<T> : OperationResult
     {
         public T ResultValue { get; }
 
-        public OperationRusult(bool isSuccess, string errorMessage, T resultValue): base(isSuccess, errorMessage)
+        public OperationResult(bool isSuccess, string errorMessage, T resultValue): base(isSuccess, errorMessage)
         {
             ResultValue = resultValue;
         }
-        public static OperationRusult<T> Succecc(T resultValue)
+        public static OperationResult<T> Success(T resultValue)
         {
-            return new OperationRusult<T>(true, string.Empty, default);
+            return new OperationResult<T>(true, string.Empty, default);
         }
-        public static OperationRusult<T> Failure(string message)
+        public static OperationResult<T> Failure(string message)
         {
-            return new OperationRusult<T>(false, message, default);
+            return new OperationResult<T>(false, message, default);
         }
     }
 
