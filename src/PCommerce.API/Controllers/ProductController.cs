@@ -31,14 +31,14 @@ namespace PCommerce.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductsAsync()
         {
-            var products = await _productService.GetProductsAsync();
+            var result = await _productService.GetProductsAsync();
 
-            if (products.IsFaulted)
+            if (result.IsFaulted)
             {
-                return BadRequest(products.ErrorMessage);
+                return BadRequest(result.ErrorMessage);
             }
 
-            return Ok(products);
+            return Ok(result.ResultValue);
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteProductAsync(int id)
@@ -64,6 +64,5 @@ namespace PCommerce.API.Controllers
 
             return Ok("Product was updated");
         }
-
     }
 }
