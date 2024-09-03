@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
@@ -41,11 +40,6 @@ namespace PCommerce.Application.Services
         {
             var validate = await _validationService.ValidateAsync(product);
 
-            if(validate == null)
-            {
-                throw new Exception();
-            }
-            
             if (validate.IsFaulted)
             {
                 return OperationResult.Failure(validate.ErrorMessage);
@@ -77,7 +71,7 @@ namespace PCommerce.Application.Services
         public async Task DeleteProductAsync(int id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if(product == null)
+            if (product == null)
             {
                 throw new Exception();
             }
