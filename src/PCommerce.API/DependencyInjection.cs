@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using PCommerce.API.Infrastructure;
 using PCommerce.Application.Services;
 using PCommerce.Application.Validators;
 using PCommerce.Infrastructure.Data;
@@ -16,7 +17,8 @@ public static class DependencyInjection
         services.AddSwaggerGen();
         
         services.AddIdentity<Account, IdentityRole>()
-            .AddEntityFrameworkStores<PCommerceDbContext>();        
+            .AddEntityFrameworkStores<PCommerceDbContext>();
+        services.AddExceptionHandler<ExceptionHandler>();
         services.AddValidatorsFromAssemblyContaining<ProductDtoValidator>();
        
 
