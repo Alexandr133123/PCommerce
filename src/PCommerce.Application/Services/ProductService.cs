@@ -4,23 +4,29 @@ using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
 using PCommerce.Infrastructure.Data.Models;
 
+
 namespace PCommerce.Application.Services
 {
     public class ProductService : IProductService
     {
         private readonly PCommerceDbContext _dbContext;
-        public ProductService(PCommerceDbContext productService)
+        private readonly ValidationService _validationService;
+        public ProductService(PCommerceDbContext productService, ValidationService validationService)
         {
             _dbContext = productService;
+            _validationService = validationService; 
         }
         public async Task AddAsync(ProductDto productDto)
         {
+            await _validationService.ValidateAsync(productDto);
+
             var product = new Product()
             {
                 Id = productDto.Id,
                 Name = productDto.Name,
                 Price = productDto.Price,
             };
+
             var categoryId = productDto.Categories.Select(p => p.Id).ToList();
             if (categoryId.Count > 0)
             {
@@ -29,9 +35,9 @@ namespace PCommerce.Application.Services
                     .ToListAsync();
                 product.Categories = categories;
             }
+
             await _dbContext.Products.AddAsync(product);
             await _dbContext.SaveChangesAsync();
-
         }
         public async Task UpdateAsync(Product product, int productId)
         {

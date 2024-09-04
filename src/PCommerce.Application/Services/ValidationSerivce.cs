@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XAct.Validation;
 
 
 namespace PCommerce.Application.Services
@@ -14,11 +15,11 @@ namespace PCommerce.Application.Services
     public class ValidationService
     {
         private readonly IServiceProvider _serviceProvider;   
-        ValidationService (IServiceProvider serviceProvider)
+        public ValidationService (IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
-        async Task ValidateAsync<T>(T enter)
+        public async Task ValidateAsync<T>(T enter)
         {
            var validator = _serviceProvider.GetService<IValidator<T>>();
             if (validator == null)

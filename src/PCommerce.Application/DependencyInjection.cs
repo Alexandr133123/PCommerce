@@ -9,7 +9,9 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services
-        .AddTransient<IProductService, ProductService>();
+        .AddTransient<IProductService, ProductService>()
+        .AddTransient<ValidationService>();
+        
 
         return services;
     }
