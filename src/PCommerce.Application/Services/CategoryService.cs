@@ -11,14 +11,17 @@ namespace PCommerce.Application.Services
     public class CategoryService : ICategoryService
     {
         private readonly PCommerceDbContext _context;
+        private readonly ValidationService _validationService;
         
-        public CategoryService(PCommerceDbContext context) 
+        public CategoryService(PCommerceDbContext context, ValidationService validationService) 
         { 
-            _context = context; 
+            _context = context;
+            _validationService = validationService;
         }
 
-        public async Task<List<CategoryDto>> GetAllCategoriesAsync()
+        public async Task<OperationResult<List<CategoryDto>>> GetAllCategoriesAsync()
         {
+
             var categoryList = await _context.Categories.ToListAsync();
 
             var categoryDtoList = categoryList.Select(c => new CategoryDto
@@ -27,41 +30,64 @@ namespace PCommerce.Application.Services
                 Name = c.Name
             }).ToList();
             
-            return categoryDtoList;
+            return OperationResult<List<CategoryDto>>.Success(categoryDtoList);
         }
-        public async Task AddCategoryAsync(CategoryDto categoryDto)
+        public async Task<OperationResult> AddCategoryAsync(CategoryDto categoryDto)
         {
+            var validate = await _validationService.ValidateAsync(categoryDto);
+
+            if (validate.IsFaulted)
+            {
+                return OperationResult.Failure(validate.ErrorMessage);
+            }
+
             var category = new Category
             {
                 Id = categoryDto.Id,
                 Name = categoryDto.Name,
             };
+
             await _context.AddAsync(category);
+
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
-        public async Task UpdateCategoryAsync(int id, CategoryDto updatedCategoryDto)
+        public async Task<OperationResult> UpdateCategoryAsync(int id, CategoryDto updatedCategoryDto)
         {
+            var validate = await _validationService.ValidateAsync(updatedCategoryDto);
+
+            if (validate.IsFaulted)
+            {
+                return OperationResult.Failure(validate.ErrorMessage);
+            }
+
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
             if (category == null)
             {
-                throw new Exception();
+                OperationResult.Failure($"Ctegory with id - {id} not found");
             }
+
             category.Name = updatedCategoryDto.Name;
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
-        public async Task DeleteCategoryAsync(int id)
+        public async Task<OperationResult> DeleteCategoryAsync(int id)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
             if(category==null)
             {
-                throw new Exception();
+                OperationResult.Failure($"Category with id - {id} not found");
             }
 
             _context.Remove(category);
 
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
     }
 }
