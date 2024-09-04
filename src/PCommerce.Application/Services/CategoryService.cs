@@ -1,5 +1,6 @@
 ﻿
 
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.interfaces;
 using PCommerce.Application.Models;
@@ -12,25 +13,22 @@ namespace PCommerce.Application.Services
     {
         private readonly PCommerceDbContext _context;
         private readonly ValidationService _validationService;
+        private readonly IMapper _mapper;
         
-        public CategoryService(PCommerceDbContext context, ValidationService validationService) 
+        public CategoryService(PCommerceDbContext context, ValidationService validationService, IMapper mapper) 
         { 
             _context = context;
             _validationService = validationService;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult<List<CategoryDto>>> GetAllCategoriesAsync()
         {
-
             var categoryList = await _context.Categories.ToListAsync();
 
-            var categoryDtoList = categoryList.Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList();
+            var mapCategoryList = _mapper.Map<List<CategoryDto>>(categoryList);
             
-            return OperationResult<List<CategoryDto>>.Success(categoryDtoList);
+            return OperationResult<List<CategoryDto>>.Success(mapCategoryList);
         }
         public async Task<OperationResult> AddCategoryAsync(CategoryDto categoryDto)
         {
@@ -41,13 +39,9 @@ namespace PCommerce.Application.Services
                 return OperationResult.Failure(validate.ErrorMessage);
             }
 
-            var category = new Category
-            {
-                Id = categoryDto.Id,
-                Name = categoryDto.Name,
-            };
+            var mapCategory = _mapper.Map<Product>(categoryDto); 
 
-            await _context.AddAsync(category);
+            await _context.AddAsync(mapCategory);
 
             await _context.SaveChangesAsync();
 
@@ -66,7 +60,7 @@ namespace PCommerce.Application.Services
 
             if (category == null)
             {
-                OperationResult.Failure($"Ctegory with id - {id} not found");
+                return OperationResult.Failure($"Ctegory with id - {id} not found");
             }
 
             category.Name = updatedCategoryDto.Name;
@@ -80,7 +74,7 @@ namespace PCommerce.Application.Services
 
             if(category==null)
             {
-                OperationResult.Failure($"Category with id - {id} not found");
+                return OperationResult.Failure($"Category with id - {id} not found");
             }
 
             _context.Remove(category);

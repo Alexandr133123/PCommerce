@@ -4,6 +4,7 @@ using PCommerce.Application.interfaces;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Services;
 using PCommerce.Application.Validators;
+using System.Reflection;
 
 
 namespace PCommerce.Application;
@@ -18,6 +19,8 @@ public static class DependencyInjection
             .AddTransient<ValidationService>();
 
         services.AddValidatorsFromAssemblyContaining<ProductDtoValidator>();
+
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         
         return services;
     }

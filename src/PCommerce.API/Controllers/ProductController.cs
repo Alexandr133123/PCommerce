@@ -17,9 +17,9 @@ namespace PCommerce.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProductAsync(ProductDto product)
+        public async Task<IActionResult> AddProductAsync(ProductDto productDto)
         {
-            var result = await _productService.AddProductAsync(product);
+            var result = await _productService.AddProductAsync(productDto);
 
             if (result.IsFaulted)
             {
@@ -53,9 +53,9 @@ namespace PCommerce.API.Controllers
             return Ok("Product was deleted");
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateProductAsync(int id, Product updatedProduct)
+        public async Task<IActionResult> UpdateProductAsync(int id, ProductDto updatedProductDto)
         {
-            var result = await _productService.UpdateProductAsync(id, updatedProduct);
+            var result = await _productService.UpdateProductAsync(id, updatedProductDto);
 
             if (result.IsFaulted)
             {

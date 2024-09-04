@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
@@ -10,59 +11,34 @@ namespace PCommerce.Application.Services
     {
         private readonly PCommerceDbContext _context;
         private readonly ValidationService _validationService;
-        public ProductService(PCommerceDbContext context, ValidationService validationService)
+        private readonly IMapper _mapper;
+        public ProductService(PCommerceDbContext context, ValidationService validationService, IMapper mapper)
         {
             _context = context;
             _validationService = validationService;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult<List<ProductDto>>> GetProductsAsync()
         {
-
             var productList = await _context.Products.Include(c => c.Categories).ToListAsync();
 
-            var productDtoList = productList.Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Categories = p.Categories.Select(c => new CategoryDto
-                {
-                    Id = c.Id,
-                    Name = c.Name,
+            var mapProductList = _mapper.Map<List<ProductDto>>(productList);
 
-                }).ToList(),
-            }).ToList();
-
-            return OperationResult<List<ProductDto>>.Success(productDtoList);
+            return OperationResult<List<ProductDto>>.Success(mapProductList);
         }
-        public async Task<OperationResult> AddProductAsync(ProductDto product)
+        public async Task<OperationResult> AddProductAsync(ProductDto productDto)
         {
-            var validate = await _validationService.ValidateAsync(product);
+            var validate = await _validationService.ValidateAsync(productDto);
 
             if (validate.IsFaulted)
             {
                 return OperationResult.Failure(validate.ErrorMessage);
             }
 
-            var prod = new Product()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price
-            };
+            var mapProduct = _mapper.Map<Product>(productDto);
 
-            var categoryId = product.Categories.Select(p => p.Id).ToList();
-            if (categoryId.Count != 0)
-            {
-                var categoryes = await _context.Categories
-                    .Where(c => categoryId.Contains(c.Id))
-                    .ToListAsync();
-
-                prod.Categories = categoryes;
-            }
-
-            await _context.AddAsync(prod);
+            await _context.AddAsync(mapProduct);
 
             await _context.SaveChangesAsync();
 
@@ -71,17 +47,21 @@ namespace PCommerce.Application.Services
         public async Task<OperationResult> DeleteProductAsync(int id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
             if (product == null)
             {
                 OperationResult.Failure($"Product with id - {id}, not found");
             }
+
             _context.Remove(product);
+
             await _context.SaveChangesAsync();
+
             return OperationResult.Success();
         }
-        public async Task<OperationResult> UpdateProductAsync(int id, Product updatedProduct)
+        public async Task<OperationResult> UpdateProductAsync(int id, ProductDto updatedProductDto)
         {
-            var validate = await _validationService.ValidateAsync(updatedProduct);
+            var validate = await _validationService.ValidateAsync(updatedProductDto);
 
             if (validate.IsFaulted)
             {
@@ -89,12 +69,15 @@ namespace PCommerce.Application.Services
             }
 
             var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+
             if (product == null)
             {
                 OperationResult.Failure($"Product with id - {id}, not found");
             }
-            product.Price = updatedProduct.Price;
-            product.Name = updatedProduct.Name;
+
+            product.Price = updatedProductDto.Price;
+            product.Name = updatedProductDto.Name;
+
             await _context.SaveChangesAsync();
 
             return OperationResult.Success();
