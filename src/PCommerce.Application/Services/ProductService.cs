@@ -38,6 +38,15 @@ namespace PCommerce.Application.Services
 
             var mapProduct = _mapper.Map<Product>(productDto);
 
+            var categoryId = productDto.Categories.Select(p => p.Id).ToList();
+            if (categoryId.Count != 0)
+            {
+                var categories = await _context.Categories
+                    .Where(c => categoryId.Contains(c.Id))
+                    .ToListAsync();
+                mapProduct.Categories = categories;
+            }
+
             await _context.AddAsync(mapProduct);
 
             await _context.SaveChangesAsync();

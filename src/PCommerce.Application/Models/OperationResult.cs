@@ -34,7 +34,7 @@ namespace PCommerce.Application.Models
         }
         public static OperationResult<T> Success(T resultValue)
         {
-            return new OperationResult<T>(true, string.Empty, default);
+            return new OperationResult<T>(true, string.Empty, resultValue);
         }
         public static OperationResult<T> Failure(string message)
         {

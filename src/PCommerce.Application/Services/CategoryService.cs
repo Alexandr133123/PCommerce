@@ -39,7 +39,7 @@ namespace PCommerce.Application.Services
                 return OperationResult.Failure(validate.ErrorMessage);
             }
 
-            var mapCategory = _mapper.Map<Product>(categoryDto); 
+            var mapCategory = _mapper.Map<Category>(categoryDto); 
 
             await _context.AddAsync(mapCategory);
 
