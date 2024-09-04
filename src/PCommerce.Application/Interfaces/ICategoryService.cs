@@ -9,13 +9,13 @@ namespace PCommerce.Application.Interfaces
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync();
+        Task<OperationResult<IEnumerable<CategoryDto>>> GetAllCategoriesAsync();
 
-        Task AddCategoryAsync (CategoryDto categoryDto);
+        Task<OperationResult> AddCategoryAsync (CategoryDto categoryDto);
 
-        Task RemoveCategoryAsync(int id);
+        Task <OperationResult> RemoveCategoryAsync(int id);
 
-        Task UpdateCategoryAsync (CategoryDto categoryDto);
+        Task<OperationResult> UpdateCategoryAsync (CategoryDto categoryDto);
 
         
 

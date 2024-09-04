@@ -20,25 +20,49 @@ namespace PCommerce.API.Controllers
         public async Task<IActionResult> GetAllCategoryAsync()
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
-            return Ok(categories);
+
+            if (categories.IsFaulted)
+            {
+                return BadRequest(categories.ErrorMessage);
+            }
+
+            return Ok(categories.ResultValue);
         }
         [HttpPost]
         public async Task<IActionResult> AddCategoryAsync(CategoryDto categoryDto)
         {
-            await _categoryService.AddCategoryAsync(categoryDto);
+            var result = await _categoryService.AddCategoryAsync(categoryDto);
+
+            if (result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
             return Ok("Category Added");
         }
         [HttpPost("UpdateCategory")]
         public async Task<IActionResult> UpdateCategoryAsync(CategoryDto categoryDto)
         {
-            await _categoryService.UpdateCategoryAsync(categoryDto);
+            var result = await _categoryService.UpdateCategoryAsync(categoryDto);
+
+            if (result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
             return Ok("Product updated");
 
         }
         [HttpDelete]
         public async Task<IActionResult> RemoveCategoryAsync(int id)
         {
-            await _categoryService.RemoveCategoryAsync(id);
+            var result = await _categoryService.RemoveCategoryAsync(id);
+
+            if (result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
             return Ok("Category Deleted");
         }
     }

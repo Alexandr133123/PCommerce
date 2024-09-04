@@ -14,12 +14,15 @@ namespace PCommerce.Application.Services
     public class CategoryService:ICategoryService
     {
         private readonly PCommerceDbContext _context;
-        public CategoryService(PCommerceDbContext context)
+
+        private readonly ValidateService _validateService;
+        public CategoryService(PCommerceDbContext context,ValidateService validateService)
         {
             _context = context;
+            _validateService = validateService;
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync()
+        public async Task<OperationResult<IEnumerable<CategoryDto>>> GetAllCategoriesAsync()
         {
             var categories = await _context.Categories.ToListAsync();
 
@@ -30,10 +33,19 @@ namespace PCommerce.Application.Services
                 Name = p.Name,
 
             }).ToList();
-            return categoryDto;
+            return OperationResult<IEnumerable<CategoryDto>>.Success(categoryDto);
         }
-        public async Task AddCategoryAsync(CategoryDto categoryDto)
+        public async Task<OperationResult>AddCategoryAsync(CategoryDto categoryDto)
         {
+            var validateResult = await _validateService.ValidateAsync(categoryDto);
+
+            if (!validateResult.IsValid)
+            {
+                var errorMessage = string.Join("\n", validateResult.Errors.Select(p => p.ErrorMessage));
+
+                return OperationResult.Failure(errorMessage);
+            }
+
             var category = new Category
             {
                 Id = categoryDto.Id,
@@ -42,11 +54,23 @@ namespace PCommerce.Application.Services
 
             await _context.AddAsync(category);
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
+
             
         }
-        public async Task UpdateCategoryAsync(CategoryDto categoryDto)
+        public async Task<OperationResult> UpdateCategoryAsync(CategoryDto categoryDto)
         {
             var existingCategory = await _context.Categories.FirstOrDefaultAsync(p => p.Id == categoryDto.Id);
+
+            var validateResult = await _validateService.ValidateAsync(existingCategory);
+
+            if (!validateResult.IsValid)
+            {
+                var errorMessage = string.Join("\n", validateResult.Errors.Select(p => p.ErrorMessage));
+
+                return OperationResult.Failure(errorMessage);
+            }
 
             if (existingCategory == null)
             {
@@ -56,8 +80,10 @@ namespace PCommerce.Application.Services
             existingCategory.Name = categoryDto.Name;
 
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
-        public async Task RemoveCategoryAsync(int id)
+        public async Task<OperationResult> RemoveCategoryAsync(int id)
         {
             var existingCategory = await _context.Categories.FirstOrDefaultAsync(p => p.Id == id);
 
@@ -69,6 +95,8 @@ namespace PCommerce.Application.Services
             _context.Remove(existingCategory);
 
             await _context.SaveChangesAsync();
+
+            return OperationResult.Success();
         }
     }
 }

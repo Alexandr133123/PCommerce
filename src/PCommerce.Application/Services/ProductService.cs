@@ -27,8 +27,6 @@ namespace PCommerce.Application.Services
         {
            var products = await _context.Products.Include(p => p.Categories).ToListAsync();
 
-            
-
             var productsDtos = products.Select(p => new ProductDto
             {
                 Id = p.Id,
