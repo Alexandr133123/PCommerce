@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
@@ -16,23 +17,21 @@ namespace PCommerce.Application.Services
         private readonly PCommerceDbContext _context;
 
         private readonly ValidateService _validateService;
-        public CategoryService(PCommerceDbContext context,ValidateService validateService)
+
+        private readonly IMapper _mapper;
+        public CategoryService(PCommerceDbContext context,ValidateService validateService,IMapper mapper)
         {
             _context = context;
             _validateService = validateService;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult<IEnumerable<CategoryDto>>> GetAllCategoriesAsync()
         {
             var categories = await _context.Categories.ToListAsync();
 
-            var categoryDto = categories.Select(p => new CategoryDto
-            {
-                Id = p.Id,
+            var categoryDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
 
-                Name = p.Name,
-
-            }).ToList();
             return OperationResult<IEnumerable<CategoryDto>>.Success(categoryDto);
         }
         public async Task<OperationResult>AddCategoryAsync(CategoryDto categoryDto)
@@ -46,11 +45,7 @@ namespace PCommerce.Application.Services
                 return OperationResult.Failure(errorMessage);
             }
 
-            var category = new Category
-            {
-                Id = categoryDto.Id,
-                Name = categoryDto.Name,
-            };
+            var category = _mapper.Map<Category>(categoryDto);
 
             await _context.AddAsync(category);
             await _context.SaveChangesAsync();
@@ -59,11 +54,9 @@ namespace PCommerce.Application.Services
 
             
         }
-        public async Task<OperationResult> UpdateCategoryAsync(CategoryDto categoryDto)
+        public async Task<OperationResult> UpdateCategoryAsync(CategoryDto categoryToUpdate)
         {
-            var existingCategory = await _context.Categories.FirstOrDefaultAsync(p => p.Id == categoryDto.Id);
-
-            var validateResult = await _validateService.ValidateAsync(existingCategory);
+            var validateResult = await _validateService.ValidateAsync(categoryToUpdate);
 
             if (!validateResult.IsValid)
             {
@@ -72,12 +65,14 @@ namespace PCommerce.Application.Services
                 return OperationResult.Failure(errorMessage);
             }
 
+            var existingCategory = await _context.Categories.FirstOrDefaultAsync(p => p.Id == categoryToUpdate.Id);
+
             if (existingCategory == null)
             {
                 throw new Exception($"Category with id{existingCategory.Id} did not exist");
             }
 
-            existingCategory.Name = categoryDto.Name;
+            existingCategory.Name = categoryToUpdate.Name;
 
             await _context.SaveChangesAsync();
 

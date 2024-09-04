@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
@@ -17,29 +18,20 @@ namespace PCommerce.Application.Services
 
         private readonly ValidateService _validateService;
 
-        public  ProductService(PCommerceDbContext context, ValidateService validateService)
+        private readonly IMapper _mapper;
+
+        public  ProductService(PCommerceDbContext context, ValidateService validateService,IMapper mapper)
         {
             _context = context;
             _validateService = validateService;
+            _mapper = mapper;
         }
 
         public async Task<OperationResult<IEnumerable<ProductDto>>> GetAllProductsAsync()
         {
            var products = await _context.Products.Include(p => p.Categories).ToListAsync();
 
-            var productsDtos = products.Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Categories = p.Categories.Select(c => new CategoryDto
-                {
-                    Id = c.Id,
-
-                    Name = c.Name,
-
-                }).ToList(),
-            }).ToList();
+            var productsDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
 
             return OperationResult<IEnumerable<ProductDto>>.Success(productsDtos);
 
@@ -57,12 +49,7 @@ namespace PCommerce.Application.Services
 
             }
 
-            var product  = new Product
-            {
-                Id = productDto.Id,
-                Name = productDto.Name,
-                Price = productDto.Price,
-            };
+            var product = _mapper.Map<Product>(productDto);
 
             List<int> categoryIds = productDto.Categories.Select(c => c.Id).ToList();
 
@@ -81,11 +68,10 @@ namespace PCommerce.Application.Services
             
         }
 
-        public async Task<OperationResult> UpdateProductAsync(Product productToUpdate)
+        public async Task<OperationResult> UpdateProductAsync(ProductDto productToUpdate)
         {
-            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productToUpdate.Id);
-
-            var validateResult = await _validateService.ValidateAsync(existingProduct);
+           
+            var validateResult = await _validateService.ValidateAsync(productToUpdate);
 
             if (!validateResult.IsValid)
             {
@@ -94,7 +80,10 @@ namespace PCommerce.Application.Services
                 return OperationResult.Failure(responseMessage);
             }
 
-            if (existingProduct == null )
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productToUpdate.Id);
+
+         
+            if (existingProduct == null)
             {
                 return OperationResult.Failure($"Product with ID {productToUpdate.Id} not found");
             }
@@ -108,7 +97,7 @@ namespace PCommerce.Application.Services
             return OperationResult.Success();
 
         }
-        
+
         public async Task<OperationResult> RemoveProductAsync(int id)
         {
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);

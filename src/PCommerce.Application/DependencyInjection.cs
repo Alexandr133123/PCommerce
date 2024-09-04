@@ -19,6 +19,8 @@ public static class DependencyInjection
 
         services.AddTransient<ValidateService>();
 
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
         return services;
     }
 }

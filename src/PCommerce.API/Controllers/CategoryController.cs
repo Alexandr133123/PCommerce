@@ -50,7 +50,7 @@ namespace PCommerce.API.Controllers
                 return BadRequest(result.ErrorMessage);
             }
 
-            return Ok("Product updated");
+            return Ok("Category updated");
 
         }
         [HttpDelete]
