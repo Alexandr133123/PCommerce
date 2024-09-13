@@ -30,14 +30,14 @@ namespace PCommerce.API.Controllers
                 return BadRequest(products.ErrorMessage);
             }
             return Ok(products.ResultValue);
-            
+
         }
         [HttpPost]
         public async Task<IActionResult> AddProductAsync(ProductDto product)
         {
             var result = await _productService.AddProductAsync(product);
 
-            if(result.IsFaulted)
+            if (result.IsFaulted)
             {
                 return BadRequest(result.ErrorMessage);
             }
@@ -48,7 +48,7 @@ namespace PCommerce.API.Controllers
         {
             var result = await _productService.UpdateProductAsync(productToUpdate);
 
-            if(result.IsFaulted)
+            if (result.IsFaulted)
             {
                 return BadRequest(result.ErrorMessage);
             }
@@ -67,6 +67,18 @@ namespace PCommerce.API.Controllers
             }
 
             return Ok("Product Deleted");
+        }
+        [HttpGet("{productId:int}")]
+        public async Task<IActionResult> GetProductByIdAsync(int productId)
+        {
+            var product =  await _productService.GetProductByIdAsync(productId);
+
+            if (product.IsFaulted)
+            {
+                return BadRequest($"Product with Id{productId} not found");
+            }
+
+            return Ok(product.ResultValue);
         }
 
     }

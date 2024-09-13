@@ -17,5 +17,7 @@ namespace PCommerce.Application.Interfaces
         Task<OperationResult>UpdateProductAsync(ProductDto product);
 
         Task<OperationResult> RemoveProductAsync(int id);
+
+        Task<OperationResult<ProductDto>> GetProductByIdAsync(int productDtoId);
     }
 }

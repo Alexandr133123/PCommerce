@@ -17,6 +17,8 @@ namespace PCommerce.Application.Interfaces
 
         Task<OperationResult> UpdateCategoryAsync (CategoryDto categoryDto);
 
+        Task<OperationResult<CategoryDto>> GetCategoryByIdAsync(int categoryDtoId);
+
         
 
 

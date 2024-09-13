@@ -65,5 +65,16 @@ namespace PCommerce.API.Controllers
 
             return Ok("Category Deleted");
         }
+        [HttpGet("{categoryId:int}")]
+        public async Task<IActionResult> GetCategoryByIdAsync(int categoryId)
+        {
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+
+            if (category.IsFaulted)
+            {
+                return BadRequest(category.ErrorMessage);
+            }
+            return Ok(category.ResultValue);
+        }
     }
 }
