@@ -11,6 +11,7 @@ namespace PCommerce.Application.interfaces
         public Task<OperationResult> AddCategoryAsync(CategoryDto categoryDto);       
         public Task<OperationResult> UpdateCategoryAsync(int id, CategoryDto updatedCategoryDto);
         public Task<OperationResult> DeleteCategoryAsync(int id);
+        public Task<OperationResult<CategoryDto>> GetCategoryByIdAsync(int categoryId);
         
     }
 }

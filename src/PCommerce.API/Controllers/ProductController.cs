@@ -64,5 +64,17 @@ namespace PCommerce.API.Controllers
 
             return Ok("Product was updated");
         }
+        [HttpGet("{productId:int}")]
+        public async Task<IActionResult> GetProductByIdAsync(int productId)
+        {
+            var result = await _productService.GetProductByIdAsync(productId);
+
+            if (result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok(result.ResultValue);
+        }
     }
 }

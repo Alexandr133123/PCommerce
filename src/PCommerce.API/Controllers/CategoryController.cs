@@ -29,7 +29,7 @@ namespace PCommerce.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCategoriesAsync()
         {
-            var result =  await _categoryService.GetAllCategoriesAsync();
+            var result = await _categoryService.GetAllCategoriesAsync();
 
             if (result.IsFaulted)
             {
@@ -38,7 +38,7 @@ namespace PCommerce.API.Controllers
 
             return Ok(result.ResultValue);
         }
-        
+
         [HttpPut]
         public async Task<IActionResult> UpdateCategoryAsync(int id, CategoryDto updatedCategoryDto)
         {
@@ -62,6 +62,18 @@ namespace PCommerce.API.Controllers
             }
 
             return Ok("Category delete");
+        }
+        [HttpGet("{categoryId:int}")]
+        public async Task<IActionResult> GetCategoryByIdAsync(int categoryId)
+        {
+            var result = await _categoryService.GetCategoryByIdAsync(categoryId);
+
+            if (result.IsFaulted)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok(result.ResultValue);
         }
     }
 }

@@ -91,5 +91,19 @@ namespace PCommerce.Application.Services
 
             return OperationResult.Success();
         }
+        
+        public async Task<OperationResult<ProductDto>> GetProductByIdAsync(int productId)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
+            var mapProduct = _mapper.Map<ProductDto>(product);
+
+            if(product == null)
+            {
+                return OperationResult<ProductDto>.Failure($"Product with id - {productId}, not found");
+            }
+
+            return OperationResult<ProductDto>.Success(mapProduct);
+        }
     }
 }

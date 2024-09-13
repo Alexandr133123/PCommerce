@@ -83,5 +83,19 @@ namespace PCommerce.Application.Services
 
             return OperationResult.Success();
         }
+
+        public async Task<OperationResult<CategoryDto>> GetCategoryByIdAsync(int categoryId)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            var mapCategory = _mapper.Map<CategoryDto>(category);
+
+            if (category == null)
+            {
+                return OperationResult<CategoryDto>.Failure($"Category with id - {categoryId}, not found");
+            }
+
+            return OperationResult<CategoryDto>.Success(mapCategory);
+        }
     }
 }
