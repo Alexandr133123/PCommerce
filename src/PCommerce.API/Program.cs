@@ -1,4 +1,5 @@
 using PCommerce.API;
+using PCommerce.API.RpcServices;
 using PCommerce.Application;
 using PCommerce.Infrastructure;
 
@@ -20,6 +21,8 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 }
+
+app.MapGrpcService<ProductRpcService>();
 
 app.MapControllers();
 

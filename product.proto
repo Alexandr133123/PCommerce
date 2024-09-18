@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Protos.Product";
+
+package product;
+
+service Product {
+  rpc Test (ProductRequest) returns (ProductResponse);
+}
+
+message ProductRequest {
+  string test = 1;
+}
+
+message ProductResponse {
+  string test = 1;
+}
+
