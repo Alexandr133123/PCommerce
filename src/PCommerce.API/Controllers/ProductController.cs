@@ -19,11 +19,11 @@ namespace PCommerce.API.Controllers
             _productService = productService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllProductsAsync()
+        [HttpGet("{category}")]
+        public async Task<IActionResult> GetAllProductsAsync(string? category, [FromQuery] ProductFilters? productFilters)
         {
 
-            var products = await _productService.GetAllProductsAsync();
+            var products = await _productService.GetAllProductsAsync(category,productFilters);
 
             if (products.IsFaulted)
             {

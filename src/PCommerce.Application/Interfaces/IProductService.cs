@@ -10,7 +10,7 @@ namespace PCommerce.Application.Interfaces
 {
     public interface IProductService
     {
-        Task<OperationResult<IEnumerable<ProductDto>>> GetAllProductsAsync();
+        Task<OperationResult<IEnumerable<ProductDto>>> GetAllProductsAsync(string? category,ProductFilters? productFilters);
 
         Task <OperationResult> AddProductAsync(ProductDto productDto);
 

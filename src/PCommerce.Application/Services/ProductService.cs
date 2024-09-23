@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PCommerce.Application.Interfaces;
 using PCommerce.Application.Models;
 using PCommerce.Infrastructure.Data;
@@ -27,9 +28,29 @@ namespace PCommerce.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<OperationResult<IEnumerable<ProductDto>>> GetAllProductsAsync()
+        public async Task<OperationResult<IEnumerable<ProductDto>>> GetAllProductsAsync(string? category,ProductFilters? productFilters)
         {
-            var products = await _context.Products.Include(p => p.Categories).ToListAsync();
+            IQueryable<Product> productQuery = _context.Products.Include(p => p.Categories);
+
+            if(category != null )
+            {
+                productQuery = productQuery.Where(p => p.Categories.Any(c => c.Name == category));
+            }
+
+            if(productFilters != null)
+            {
+                if(productFilters.PriceFrom.HasValue && productFilters.PriceTo.HasValue)
+                {
+                    productQuery = productQuery.Where(p => p.Price >= productFilters.PriceFrom && p.Price <= productFilters.PriceTo);
+                }
+
+                if(!productFilters.Name.IsNullOrEmpty())
+                {
+                    productQuery = productQuery.Where(p => p.Name.Contains(productFilters.Name));
+                }
+            }
+
+            var products = await productQuery.ToListAsync();
 
             var productsDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
 
@@ -115,8 +136,7 @@ namespace PCommerce.Application.Services
         }
         public async Task<OperationResult<ProductDto>> GetProductByIdAsync(int productDtoId)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(c => c.Id == productDtoId);
-
+            var product = await _context.Products.Include(p =>p.Categories).FirstOrDefaultAsync(c => c.Id == productDtoId);
             if (product == null)
             {
                 OperationResult<ProductDto>.Failure($"Product with ID {productDtoId} not found");
