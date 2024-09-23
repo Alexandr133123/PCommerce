@@ -11,6 +11,7 @@ namespace PCommerce.API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+
         public ProductController(IProductService productService)
         {
             _productService = productService;
@@ -28,10 +29,10 @@ namespace PCommerce.API.Controllers
 
             return Ok("Product was added");
         }
-        [HttpGet]
-        public async Task<IActionResult> GetProductsAsync()
+        [HttpGet("{category}")]
+        public async Task<IActionResult> GetProductsAsync(string? category, [FromQuery] ProductFilters? productFilters)
         {
-            var result = await _productService.GetProductsAsync();
+            var result = await _productService.GetProductsAsync(category, productFilters);
 
             if (result.IsFaulted)
             {

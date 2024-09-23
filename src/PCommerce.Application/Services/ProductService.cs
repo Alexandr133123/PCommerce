@@ -19,9 +19,14 @@ namespace PCommerce.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<OperationResult<List<ProductDto>>> GetProductsAsync()
+        public async Task<OperationResult<List<ProductDto>>> GetProductsAsync(string? category, ProductFilters? productFilters)
         {
-            var productList = await _context.Products.Include(c => c.Categories).ToListAsync();
+            IQueryable<Product> productQuery = _context.Products.Include(c => c.Categories);
+
+            if(productFilters.PriceFrom != null && productFilters.PriceFrom != null)
+            {
+
+            }
 
             var mapProductList = _mapper.Map<List<ProductDto>>(productList);
 
