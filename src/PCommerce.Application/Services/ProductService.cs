@@ -23,12 +23,24 @@ namespace PCommerce.Application.Services
         {
             IQueryable<Product> productQuery = _context.Products.Include(c => c.Categories);
 
-            if(productFilters.PriceFrom != null && productFilters.PriceFrom != null)
+            if (category != null)
             {
-
+                productQuery = productQuery.Where(p => p.Categories.Any(c => c.Name == category));
             }
 
-            var mapProductList = _mapper.Map<List<ProductDto>>(productList);
+            if (productFilters?.PriceFrom != null && productFilters?.PriceFrom != null)
+            {
+                productQuery = productQuery
+                    .Where(p => p.Price >= productFilters.PriceFrom && p.Price <= productFilters.PriceTo);
+            }
+            if (productFilters?.Name != null)
+            {
+                productQuery = productQuery.Where(n => n.Name.Contains(productFilters.Name));
+            }
+
+            var products = await productQuery.ToListAsync();
+
+            var mapProductList = _mapper.Map<List<ProductDto>>(products);
 
             return OperationResult<List<ProductDto>>.Success(mapProductList);
         }
